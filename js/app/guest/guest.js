@@ -14,7 +14,8 @@ import { comment } from '../components/comment.js';
 import * as confetti from '../../libs/confetti.js';
 import { pool } from '../../connection/request.js';
 
-export const guest = (() => {
+export const guest = (() =>
+{
 
     /**
      * @type {ReturnType<typeof storage>|null}
@@ -29,21 +30,23 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const countDownDate = () => {
+    const countDownDate = () =>
+    {
         const count = (new Date(document.body.getAttribute('data-time').replace(' ', 'T'))).getTime();
 
         /**
          * @param {number} num 
          * @returns {string}
          */
-        const pad = (num) => num < 10 ? `0${num}` : `${num}`;
+        const pad = (num) => num < 10 ? `0${ num }` : `${ num }`;
 
         const day = document.getElementById('day');
         const hour = document.getElementById('hour');
         const minute = document.getElementById('minute');
         const second = document.getElementById('second');
 
-        const updateCountdown = () => {
+        const updateCountdown = () =>
+        {
             const distance = Math.abs(count - Date.now());
 
             day.textContent = pad(Math.floor(distance / (1000 * 60 * 60 * 24)));
@@ -60,7 +63,8 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const showGuestName = () => {
+    const showGuestName = () =>
+    {
         /**
          * Make sure "to=" is the last query string.
          * Ex. ulems.my.id/?id=some-uuid-here&to=name
@@ -68,23 +72,26 @@ export const guest = (() => {
         const raw = window.location.search.split('to=');
         let name = null;
 
-        if (raw.length > 1 && raw[1].length >= 1) {
-            name = window.decodeURIComponent(raw[1]);
+        if (raw.length > 1 && raw[ 1 ].length >= 1)
+        {
+            name = window.decodeURIComponent(raw[ 1 ]);
         }
 
-        if (name) {
+        if (name)
+        {
             const guestName = document.getElementById('guest-name');
             const div = document.createElement('div');
             div.classList.add('m-2');
 
-            const template = `<small class="mt-0 mb-1 mx-0 p-0">${util.escapeHtml(guestName?.getAttribute('data-message'))}</small><p class="m-0 p-0" style="font-size: 1.25rem">${util.escapeHtml(name)}</p>`;
+            const template = `<small class="mt-0 mb-1 mx-0 p-0">${ util.escapeHtml(guestName?.getAttribute('data-message')) }</small><p class="m-0 p-0" style="font-size: 1.25rem">${ util.escapeHtml(name) }</p>`;
             util.safeInnerHTML(div, template);
 
             guestName?.appendChild(div);
         }
 
         const form = document.getElementById('form-name');
-        if (form) {
+        if (form)
+        {
             form.value = information.get('name') ?? name;
         }
     };
@@ -92,33 +99,40 @@ export const guest = (() => {
     /**
      * @returns {Promise<void>}
      */
-    const slide = async () => {
+    const slide = async () =>
+    {
         const interval = 6000;
         const slides = document.querySelectorAll('.slide-desktop');
 
-        if (!slides || slides.length === 0) {
+        if (!slides || slides.length === 0)
+        {
             return;
         }
 
         const desktopEl = document.getElementById('root')?.querySelector('.d-sm-block');
-        if (!desktopEl) {
+        if (!desktopEl)
+        {
             return;
         }
 
         desktopEl.dispatchEvent(new Event('undangan.slide.stop'));
 
-        if (window.getComputedStyle(desktopEl).display === 'none') {
+        if (window.getComputedStyle(desktopEl).display === 'none')
+        {
             return;
         }
 
-        if (slides.length === 1) {
-            await util.changeOpacity(slides[0], true);
+        if (slides.length === 1)
+        {
+            await util.changeOpacity(slides[ 0 ], true);
             return;
         }
 
         let index = 0;
-        for (const [i, s] of slides.entries()) {
-            if (i === index) {
+        for (const [ i, s ] of slides.entries())
+        {
+            if (i === index)
+            {
                 s.classList.add('slide-desktop-active');
                 await util.changeOpacity(s, true);
                 break;
@@ -126,26 +140,31 @@ export const guest = (() => {
         }
 
         let run = true;
-        const nextSlide = async () => {
-            await util.changeOpacity(slides[index], false);
-            slides[index].classList.remove('slide-desktop-active');
+        const nextSlide = async () =>
+        {
+            await util.changeOpacity(slides[ index ], false);
+            slides[ index ].classList.remove('slide-desktop-active');
 
             index = (index + 1) % slides.length;
 
-            if (run) {
-                slides[index].classList.add('slide-desktop-active');
-                await util.changeOpacity(slides[index], true);
+            if (run)
+            {
+                slides[ index ].classList.add('slide-desktop-active');
+                await util.changeOpacity(slides[ index ], true);
             }
 
             return run;
         };
 
-        desktopEl.addEventListener('undangan.slide.stop', () => {
+        desktopEl.addEventListener('undangan.slide.stop', () =>
+        {
             run = false;
         });
 
-        const loop = async () => {
-            if (await nextSlide()) {
+        const loop = async () =>
+        {
+            if (await nextSlide())
+            {
                 util.timeOut(loop, interval);
             }
         };
@@ -157,12 +176,14 @@ export const guest = (() => {
      * @param {HTMLButtonElement} button
      * @returns {void}
      */
-    const open = (button) => {
+    const open = (button) =>
+    {
         button.disabled = true;
         document.body.scrollIntoView({ behavior: 'instant' });
         document.getElementById('root').classList.remove('opacity-0');
 
-        if (theme.isAutoMode()) {
+        if (theme.isAutoMode())
+        {
             document.getElementById('button-theme').classList.remove('d-none');
         }
 
@@ -180,7 +201,8 @@ export const guest = (() => {
      * @param {HTMLImageElement} img
      * @returns {void}
      */
-    const modal = (img) => {
+    const modal = (img) =>
+    {
         document.getElementById('button-modal-click').setAttribute('href', img.src);
         document.getElementById('button-modal-download').setAttribute('data-src', img.src);
 
@@ -194,8 +216,10 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const modalImageClick = () => {
-        document.getElementById('show-modal-image').addEventListener('click', (e) => {
+    const modalImageClick = () =>
+    {
+        document.getElementById('show-modal-image').addEventListener('click', (e) =>
+        {
             const abs = e.currentTarget.parentNode.querySelector('.position-absolute');
 
             abs.classList.contains('d-none')
@@ -208,8 +232,10 @@ export const guest = (() => {
      * @param {HTMLDivElement} div 
      * @returns {void}
      */
-    const showStory = (div) => {
-        if (navigator.vibrate) {
+    const showStory = (div) =>
+    {
+        if (navigator.vibrate)
+        {
             navigator.vibrate(500);
         }
 
@@ -225,8 +251,10 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const normalizeArabicFont = () => {
-        document.querySelectorAll('.font-arabic').forEach((el) => {
+    const normalizeArabicFont = () =>
+    {
+        document.querySelectorAll('.font-arabic').forEach((el) =>
+        {
             el.innerHTML = String(el.innerHTML).normalize('NFC');
         });
     };
@@ -234,9 +262,12 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const animateSvg = () => {
-        document.querySelectorAll('svg').forEach((el) => {
-            if (el.hasAttribute('data-class')) {
+    const animateSvg = () =>
+    {
+        document.querySelectorAll('svg').forEach((el) =>
+        {
+            if (el.hasAttribute('data-class'))
+            {
                 util.timeOut(() => el.classList.add(el.getAttribute('data-class')), parseInt(el.getAttribute('data-time')));
             }
         });
@@ -245,7 +276,8 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const buildGoogleCalendar = () => {
+    const buildGoogleCalendar = () =>
+    {
         /**
          * @param {string} d 
          * @returns {string}
@@ -255,11 +287,11 @@ export const guest = (() => {
         const url = new URL('https://calendar.google.com/calendar/render');
         const data = new URLSearchParams({
             action: 'TEMPLATE',
-            text: 'The Wedding of Wahyu and Riski',
-            dates: `${formatDate('2023-03-15 10:00')}/${formatDate('2023-03-15 11:00')}`,
-            details: 'Tanpa mengurangi rasa hormat, kami mengundang Anda untuk berkenan menghadiri acara pernikahan kami. Terima kasih atas perhatian dan doa restu Anda, yang menjadi kebahagiaan serta kehormatan besar bagi kami.',
-            location: 'RT 10 RW 02, Desa Pajerukan, Kec. Kalibagor, Kab. Banyumas, Jawa Tengah 53191.',
-            ctz: config.get('tz'),
+            text: 'The Wedding of Ankush and Anchita',
+            dates: `${ formatDate('2025-12-05 06:00') }/${ formatDate('2025-12-05 23:00') }`,
+            details: 'Wedding Invitation\n\nJoin us in celebrating our special day!\n\nVisit our wedding invitation website for more details and to RSVP:Kaura Family.',
+            location: 'Baijnath, Himachal Pradesh, India',
+            ctz: config.get('timezone') || 'Asia/Kolkata',
         });
 
         url.search = data.toString();
@@ -269,14 +301,16 @@ export const guest = (() => {
     /**
      * @returns {object}
      */
-    const loaderLibs = () => {
+    const loaderLibs = () =>
+    {
         progress.add();
 
         /**
          * @param {{aos: boolean, confetti: boolean}} opt
          * @returns {void}
          */
-        const load = (opt) => {
+        const load = (opt) =>
+        {
             loader(opt)
                 .then(() => progress.complete('libs'))
                 .catch(() => progress.invalid('libs'));
@@ -290,7 +324,8 @@ export const guest = (() => {
     /**
      * @returns {Promise<void>}
      */
-    const booting = async () => {
+    const booting = async () =>
+    {
         animateSvg();
         countDownDate();
         showGuestName();
@@ -298,11 +333,13 @@ export const guest = (() => {
         normalizeArabicFont();
         buildGoogleCalendar();
 
-        if (information.has('presence')) {
+        if (information.has('presence'))
+        {
             document.getElementById('form-presence').value = information.get('presence') ? '1' : '2';
         }
 
-        if (information.get('info')) {
+        if (information.get('info'))
+        {
             document.getElementById('information')?.remove();
         }
 
@@ -316,7 +353,8 @@ export const guest = (() => {
     /**
      * @returns {void}
      */
-    const pageLoaded = () => {
+    const pageLoaded = () =>
+    {
         lang.init();
         offline.init();
         comment.init();
@@ -335,11 +373,13 @@ export const guest = (() => {
         window.addEventListener('resize', util.debounce(slide));
         document.addEventListener('undangan.progress.done', () => booting());
         document.addEventListener('hide.bs.modal', () => document.activeElement?.blur());
-        document.getElementById('button-modal-download').addEventListener('click', (e) => {
+        document.getElementById('button-modal-download').addEventListener('click', (e) =>
+        {
             img.download(e.currentTarget.getAttribute('data-src'));
         });
 
-        if (!token || token.length <= 0) {
+        if (!token || token.length <= 0)
+        {
             document.getElementById('comment')?.remove();
             document.querySelector('a.nav-link[href="#comment"]')?.closest('li.nav-item')?.remove();
 
@@ -349,22 +389,26 @@ export const guest = (() => {
             lib.load({ confetti: document.body.getAttribute('data-confetti') === 'true' });
         }
 
-        if (token && token.length > 0) {
+        if (token && token.length > 0)
+        {
             // add 2 progress for config and comment.
             // before img.load();
             progress.add();
             progress.add();
 
             // if don't have data-src.
-            if (!img.hasDataSrc()) {
+            if (!img.hasDataSrc())
+            {
                 img.load();
             }
 
-            session.guest(params.get('k') ?? token).then(({ data }) => {
+            session.guest(params.get('k') ?? token).then(({ data }) =>
+            {
                 document.dispatchEvent(new Event('undangan.session'));
                 progress.complete('config');
 
-                if (img.hasDataSrc()) {
+                if (img.hasDataSrc())
+                {
                     img.load();
                 }
 
@@ -383,11 +427,13 @@ export const guest = (() => {
     /**
      * @returns {object}
      */
-    const init = () => {
+    const init = () =>
+    {
         theme.init();
         session.init();
 
-        if (session.isAdmin()) {
+        if (session.isAdmin())
+        {
             storage('user').clear();
             storage('owns').clear();
             storage('likes').clear();
@@ -395,7 +441,8 @@ export const guest = (() => {
             storage('comment').clear();
         }
 
-        window.addEventListener('load', () => {
+        window.addEventListener('load', () =>
+        {
             pool.init(pageLoaded, [
                 'image',
                 'video',
